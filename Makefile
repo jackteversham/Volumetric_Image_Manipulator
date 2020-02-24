@@ -33,7 +33,7 @@ debug:
 	#echo "$(@:git-%=%)" #to debug the git commandline
 	#git commit -a -m "$m" #commit all changes 
 	#git push origin master #push to the repo
-	./$(PROGRAM) #run the program
+	#./$(PROGRAM) #run the program
 
 #and fast executable is an additional target
 release:
