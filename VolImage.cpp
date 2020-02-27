@@ -1,5 +1,6 @@
 
 #include "VolImage.h"
+#include "VolImageMan.h"
 #include "VolImageMan.cpp"
 #include <string>
 #include <iostream>
@@ -50,44 +51,20 @@ int main(int argc, char ** argv){
          extract = false;
      }  
      //END COMMAND LINE INTEFRACE
-     int width, height, stacks;
+
+     //READ HEADER FILE
      string filename = prefix +".data";
-     readHeader(width, height, stacks, filename);
+     //readHeader(width, height, stacks, filename);
 
-
-
-
+     
+     VolImageMan imageManipulator;
+     imageManipulator.readHeader(filename);
+     imageManipulator.readImages(prefix);
+     
 
     return 0;
 }
 
-void readHeader(int width, int height, int stacks, string filename){
-    string line;
-    ifstream ifs;
-   
-    ifs.open("../raws/"+filename); //try to open file and catch error
-    if(!ifs){
-        cerr<<"\nfile open failed.\nexiting...";
-        exit(0);
-    }else{
-        getline(ifs, line, '\n');
-        //cout << line << endl;
 
-        vector<int> dim;
-        string token;
-        istringstream ss(line); //crete a string stream with the line of dimensions
-        while (getline(ss, token, ' '))
-        {
-            dim.push_back(stoi(token));
-        }
-        //assign dimensions
-        width = dim[0];
-        height = dim[1];
-        stacks = dim[2];
-
-        cout << width << height << stacks << endl;
-        
-    }
-}
 
 
