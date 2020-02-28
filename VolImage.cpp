@@ -60,6 +60,8 @@ int main(int argc, char ** argv){
      VolImageMan imageManipulator;
      imageManipulator.readHeader(filename);
      imageManipulator.readImages(prefix);
+     imageManipulator.diffmap(2,2, "out");
+     //imageManipulator.~VolImageMan();
      
 
     return 0;

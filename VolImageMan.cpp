@@ -14,17 +14,23 @@ private: // private members
     int width, height, stacks; // width and height of image stack 
     std::vector<unsigned char**> slices; // data for each slice, in order
 public: // public members
-    VolImageMan(){}; // default constructor - define in .cpp
-    ~VolImageMan(){}; // destructor - define in .cpp file
+    VolImageMan(){
+        width = 0;
+        height = 0;
+    } // default constructor - define in .cpp
+    ~VolImageMan(){
+       for(int i=0; i < slices.size(); i++){
+             for(int j=1; j < height; j++){
+                delete [] slices[i][j]; //delete pointers to rows
+             } 
+          delete [] slices[i]; //delete pointers to images
+       }
+       cout << endl << "Cleaning up...\nMemory Freed!"<<endl;  
+    }
+    // destructor - define in .cpp file
 // populate the object with images in stack and //set member variables define in .cpp
 bool readImages(std::string baseName){
-  
-   for(int i =0; i< stacks; i++){
-        slices.push_back(new u_char *[height+1]); //allocate array of * chars with number of rows (height) as dimension
-        for(int j =0; j< (height+1); j++){
-        slices[i][j] = new u_char[width];    
-     }
-   }
+
    ifstream ifs;
    ifs.open("../raws/"+baseName+"0.raw", ios::binary); //try to open binary file and catch error
     if(!ifs){
@@ -35,28 +41,51 @@ bool readImages(std::string baseName){
         for(int i = 0; i < stacks; i++){  // FOR EACH STACK
             string filename = "../raws/"+baseName+to_string(i)+".raw"; //open the .raw file 0-122
             ifs.open(filename, ios::binary);//open the file
+
+            unsigned char ** slice = new unsigned char * [height];
             
-            int m = 0;
-            char buf[width]; //
-            while (!ifs.eof()) //READ UNTIL END OF RAW FILE REACHED
+            int rowCounter = 0;
+            while (rowCounter<height) //READ UNTIL END OF RAW FILE REACHED
             {  
-                ifs.read(buf, width); //READ IN ONE ROWS WORTH OF BINARY DATA THEN POPULATE
-                slices[i][m] = reinterpret_cast<unsigned char*>(buf); //cast to unsigned char from char
-                m++;
-            }           
-           
+                unsigned char *buf = new unsigned char[width]; 
+                ifs.read((char *)buf, width);
+                slice[rowCounter] = buf; 
+                rowCounter++;
+            }   
+            slices.push_back(slice);  
             ifs.close(); //close each time because we reopen the next raw file each time
 
-             std::bitset<8> x(slices[i][0][400]); //convert to binary value
-             cout << x << endl;
+             std::bitset<8> x(slices[i][0][128]); //convert to binary value
+             cout <<i<<":"<< x << endl;
         }
      }
      ifs.close(); //ensure file stream is closed
 }
 
-
    // compute difference map and write out;  define in .cpp
-void diffmap(int sliceI, int sliceJ, std::string output_prefix); // extract slice sliceId and write to output - define in .cpp
+void diffmap(int sliceI, int sliceJ, std::string output_prefix){
+
+     //  (unsigned char)(abs((float)volume[i][r][c] - (float)volume[j][r][c])/2)
+    std::vector<unsigned char> differenceMap;
+
+    unsigned char ** islice = slices[sliceI];
+    unsigned char ** j = slices[sliceJ];
+
+    for(int i = 0; i < height; i++){
+
+        for(int j= 0; j< width; j++){
+           unsigned char  out = islice[i][j];
+           std::bitset<8> x(out); //convert to binary value
+           cout << x << endl;
+           
+        }
+   }
+
+
+
+
+
+} // extract slice sliceId and write to output - define in .cpp
 void extract(int sliceId, std::string output_prefix);
 // number of bytes uses to store image data bytes //and pointers (ignore vector<> container, dims etc) 
 
@@ -90,7 +119,7 @@ void readHeader(string filename){
     }
 }
 int volImageSize(void){
-    return stacks*width*height;
+    return stacks*32 + stacks*height*32 + stacks*width * height; //32 bytes for a pointer and 1 byte per value
 }; // define in .cpp
 
 };
