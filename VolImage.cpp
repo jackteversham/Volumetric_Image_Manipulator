@@ -15,8 +15,8 @@ int main(int argc, char ** argv){
     //DEAL WITH COMMAND LINE ARGUMENTS
      string prefix;
      string output_filename;
-     bool diffMap;
-     bool extract;
+     bool diffMap=false;
+     bool extract=false;
      int i, j;
     
     if(!(argc >= 2)){ //the file prefix is compulsory
@@ -60,7 +60,18 @@ int main(int argc, char ** argv){
      VolImageMan imageManipulator;
      imageManipulator.readHeader(filename);
      imageManipulator.readImages(prefix);
-     imageManipulator.diffmap(2,2, "out");
+
+    if(extract){
+        imageManipulator.extract(i,output_filename);
+        cout << "\nExtracting slice "<<i<<" and writing it to "<<output_filename<<".raw with header file "<< output_filename<<".data located in the 'out' folder.\n";
+
+    }
+    if(diffMap){
+        imageManipulator.diffmap(i,j,output_filename);
+        cout << "\nComputing difference map between slice " <<i<< " and slice "<<j<< ". Output written to "<<output_filename<<".raw with header file "<<output_filename <<".data located in 'out' folder.\n";
+
+    }
+     
      //imageManipulator.~VolImageMan();
      
 
