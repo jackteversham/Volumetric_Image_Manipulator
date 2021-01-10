@@ -30,10 +30,7 @@ debug:
 	$(CC) $(FLAGS) $(COMPILE) $(SRCFILE).o $(SRCFILE).cpp #compile
 	$(CC) $(FLAGS) $(COMPILE) $(PROGRAM).o $(PROGRAM).cpp #compile
 	$(CC) $(FLAGS) $(LINK) $(PROGRAM) $(PROGRAM).o #link
-	#echo "$(@:git-%=%)" #to debug the git commandline
-	#git commit -a -m "$m" #commit all changes 
-	#git push origin master #push to the repo
-	#./$(PROGRAM) #run the program
+	
 
 #and fast executable is an additional target
 release:

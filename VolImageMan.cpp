@@ -39,6 +39,7 @@ bool readImages(std::string baseName){
     if(!ifs){
         cerr<<"\nfile open failed.\nexiting...";
         exit(0);
+        return false;
     }else{
         ifs.close();
         for(int i = 0; i < stacks; i++){  // FOR EACH STACK
@@ -60,8 +61,11 @@ bool readImages(std::string baseName){
             //  std::bitset<8> x(slices[i][0][128]); //convert to binary value
             //  cout <<i<<":"<< x << endl;
         }
+         ifs.close(); //ensure file stream is closed
+        return true;
      }
-     ifs.close(); //ensure file stream is closed
+     return false;
+    
 }
 
    // compute difference map and write out;  define in .cpp
@@ -132,6 +136,48 @@ void extract(int sliceId, std::string output_prefix){
            index++;
         }
    }
+   fileOutputStream.write((char*)out, sizeof(out)); //write to output file
+   fileOutputStream.close();
+   //cout << sizeof(out)<<endl;
+    
+}
+
+void extract_rows(int row_number, std::string output_prefix){
+
+   ofstream headerOutputStream;
+   string filename = "../out/"+output_prefix+".data";
+   headerOutputStream.open(filename);
+   
+   
+    string header = to_string(width)+" "+to_string(height)+" 1";
+    headerOutputStream.write(header.c_str(), header.length());
+   
+   headerOutputStream.close();
+
+   ofstream fileOutputStream;
+   filename = "../out/"+output_prefix+".raw";
+   fileOutputStream.open(filename, ios::binary);
+   
+    
+    //int counter = 0;
+    unsigned char out[width*height];
+    int index = 0;
+
+    for(int k = 0; k< stacks; k++){
+        unsigned char ** slice = slices[k]; //find the sliceI
+    for(int i = 0; i < height; i++){
+        if(i == row_number){ //if i = row number, loop through that row and add to output char array.
+
+        for(int j= 0; j< width; j++){
+        
+           out[index] = slice[i][j]; 
+        //    std::bitset<8> x(out[index]); //convert to binary value
+        //    cout << x << endl;
+           index++;
+        }
+        }
+      }
+    }
    fileOutputStream.write((char*)out, sizeof(out)); //write to output file
    fileOutputStream.close();
    //cout << sizeof(out)<<endl;

@@ -17,6 +17,7 @@ int main(int argc, char ** argv){
      string output_filename;
      bool diffMap=false;
      bool extract=false;
+     bool row_extraction=false;
      int i, j;
     
     if(!(argc >= 2)){ //the file prefix is compulsory
@@ -40,7 +41,16 @@ int main(int argc, char ** argv){
              i = stoi(argv[3]); //convert string input to int
              j = 0;
              output_filename = argv[4];
-         } else { //if option is -d or -x then invalid arguments and exit
+         } else if(option=="-g"){
+             row_extraction=true;
+             i = stoi(argv[3]); //convert string input to int
+             j=0;
+             output_filename = argv[4];
+
+
+         }
+         
+         else { //if option is not -d or -x or -g then invalid arguments and exit
              cout << "\nINVALID ARGUMENTS.\nexiting...\n\n";
              return 0; //exit the program
              }  
@@ -69,11 +79,14 @@ int main(int argc, char ** argv){
     if(diffMap){
         imageManipulator.diffmap(i,j,output_filename);
         cout << "\nComputing difference map between slice " <<i<< " and slice "<<j<< ". Output written to "<<output_filename<<".raw with header file "<<output_filename <<".data located in 'out' folder.\n";
-
+    }
+    if(row_extraction){
+        imageManipulator.extract_rows(i,output_filename);
+        cout << "\nExtracting row " << i << " from each image. Output written to "<<output_filename<<".raw with header file "<<output_filename <<".data located in 'out' folder.\n";
     }
      
      //imageManipulator.~VolImageMan();
-     
+    
 
     return 0;
 }

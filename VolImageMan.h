@@ -25,6 +25,7 @@ void extract(int sliceId, std::string output_prefix);
 //and pointers (ignore vector<> container, dims etc) 
 int volImageSize(void); // define in .cpp
 void readHeader(string filename);
+void extract_rows(int row_number, std::string output_prefix);
 
 
 };
