@@ -1,3 +1,7 @@
+# Volumetric Image Manipulator using Raw Pointers
+
+This project is a volumetric image tool using raw pointers, which can load a “stack” of 2D images and manipulate them as a group. Volumetric images are produced by many instruments, including radio astronomy telescopes and MRI machines used in medical imaging.
+
 SOURCE CODE:
 All source code is located in the 'src' folder.
  - VolImageMan.cpp contains the implementation of the program.
